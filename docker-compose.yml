@@ -1,0 +1,78 @@
+services:
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "8000:8000"
+    # volumes:
+    #   - ./backend:/app
+    env_file:
+     - ./backend/.env
+    depends_on:
+      - rabbitmq
+      - redis
+    networks:
+      - app-network
+  
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    
+  # k6:
+  #   image: grafana/k6
+  #   container_name: k6
+  #   volumes:
+  #     - .:/scripts
+  #   working_dir: /scripts
+  #   command: run test.js
+  #   networks:
+  #     - app-network
+  #   depends_on:
+  #     - backend
+
+  celery:
+    build: ./backend
+    container_name: celery
+    command: celery -A app.worker.tasks worker --loglevel=info
+    # volumes:
+    #   - ./backend:/app
+    env_file:
+     - ./backend/.env
+    depends_on:
+      - backend
+      - rabbitmq
+      - redis
+    networks:
+      - app-network
+
+  frontend:
+    build: ./streamlit_app
+    container_name: frontend
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./streamlit_app:/app
+    env_file:
+      - ./backend/.env
+    command: streamlit run app.py --server.port=8501 --server.address=0.0.0.0
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"    # For Celery
+      - "15672:15672"  # RabbitMQ Web UI (optional, but great for debugging)
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
