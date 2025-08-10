@@ -367,6 +367,31 @@ docker compose up --build
 
 ---
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/home_screen.png" alt="Home screen" width="45%">
+  <img src="docs/screenshots/upload_screen.png" alt="Upload CSV" width="45%">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/trend tool.png" alt="Trend plot result" width="45%">
+  <img src="docs/screenshots/distribution plots tool.png" alt="Distribution plot result" width="45%">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/summary_state tool.png" alt="Summary statistics result" width="70%">
+</p>
+
+<details>
+<summary><b>Developer flow (optional)</b></summary>
+
+<p align="center">
+  <img src="docs/screenshots/sql query tool.png" alt="SQL query tool" width="45%">
+  <img src="docs/screenshots/upload to s3.png" alt="Presigned S3 upload" width="45%">
+</p>
+</details>
+
 ## Observability
 
 * **Structured logging** from API and worker
