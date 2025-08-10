@@ -440,6 +440,10 @@ docker compose up --build
 * **0%** errors
 * **p95** latency \~ **22.81 ms**
 
+<p align="center">
+  <img src="docs/screenshots/datasense_stress_test.png" alt="Home screen" width="45%">
+</p>
+
 > Results depend on instance size, dataset, prompt/tool mix, and LLM provider latency. Reproduce with the script below and your environment.
 
 **Sample k6 script** (`k6/script.js`):
