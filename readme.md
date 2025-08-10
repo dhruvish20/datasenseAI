@@ -174,7 +174,7 @@ It is designed to be **resume‑grade** and **production‑leaning**:
 {
   "file_name": "data.csv",
   "content_type": "text/csv",
-  "user_id": "user_123" 
+  "user_id": "user_123"  // optional; for multi-tenant prefixes
 }
 ```
 
