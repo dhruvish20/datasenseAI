@@ -61,7 +61,7 @@ It is designed to be **resume‑grade** and **production‑leaning**:
 ## Architecture
 
 ```mermaid
-flowchart 
+flowchart LR
   A[Client / Frontend] -->|1. Get presigned URL| B[/FastAPI/]
   B -->|2. Presigned URL| A
   A -->|3. PUT file to S3| S[S3]
