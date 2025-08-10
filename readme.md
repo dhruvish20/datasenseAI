@@ -24,9 +24,7 @@
 * [Security & Multi‑Tenancy](#security--multi-tenancy)
 * [Production Deployment (EC2)](#production-deployment-ec2)
 * [Roadmap & Future Work](#roadmap--future-work)
-* [FAQ](#faq)
 * [Contributing](#contributing)
-* [License](#license)
 
 ---
 
