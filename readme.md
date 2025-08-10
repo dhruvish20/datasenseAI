@@ -60,20 +60,50 @@ It is designed to be **resume‑grade** and **production‑leaning**:
 
 ## Architecture
 
-```mermaid
-flowchart LR
-  A[Client / Frontend] -->|1. Get presigned URL| B[/FastAPI/]
-  B -->|2. Return presigned URL| A
-  A -->|3. PUT file to S3| S[S3]
-  B -->|4. Save file metadata| R[Redis]
-  A -->|5. POST /ask| B
-  B -->|6. Cache check| R
-  B -->|7. Enqueue job| C[Celery Worker]
-  C -->|8. Load CSV| D[DuckDB]
-  C -->|9. Run tools| G[LangGraph Agent]
-  C -->|10. Write artifacts| S
-  C -->|11. Write cache| R
-  B -->|12. Return result| A
+```text
++-------------------+        +-----------+          +-----+
+| Client / Frontend | -----> |  FastAPI  | <------> |Redis|
++-------------------+        +-----------+          +-----+
+           |                         |                 ^
+           | (PUT data.csv)         | (store metadata)|
+           v                         v                 |
+         +-----+   (presigned URL) +-----------+      |
+         | S3  | <---------------- |  FastAPI  | -----+
+         +-----+                    +-----------+
+           ^                               |
+           |                               | (enqueue job)
+           |                               v
+           |                         +-----------+        +--------+
+           |                         |  Celery   | -----> | DuckDB |
+           |                         +-----------+        +--------+
+           |                               |
+           |                               | (run tools)
+           |                               v
+           |                         +-----------+
+           +------------------------ | LangGraph |
+                                     +-----------+
+                                           |
+                                           | (write artifacts)
+                                           v
+                                         +-----+
+                                         | S3  |
+                                         +-----+
+                                           |
+                                           | (cache result)
+                                           v
+                                         +-----+
+                                         |Redis|
+                                         +-----+
+                                           |
+                                           v
+                                     +-----------+
+                                     |  FastAPI  |
+                                     +-----------+
+                                           |
+                                           v
+                                  +-------------------+
+                                  | Client / Frontend |
+                                  +-------------------+
 ```
 
 **Stack:** FastAPI (HTTP), Celery (task queue), Redis (cache + metadata), DuckDB (query engine), S3 (artifact store), LangGraph (agent orchestration), LLM provider (OpenAI‑compatible).
